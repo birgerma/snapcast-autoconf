@@ -1,7 +1,11 @@
 ---
 loglevel: debug
 # For now, we only support TCP connections. This could always be on localhost!
-server: tcp://192.168.1.29:1705
+# server: tcp://192.168.1.29:1705
+host: 192.168.1.175
+port: 1705
+pull_intervall: 1 # seconds
+
 # We only explicitly manage the streams and clients referenced in this file - however,
 # that doesn't mean that snapcast-autoconfig won't inadvertently mess up a manual grouping
 # you've made. Snapcast groups are dynamic, fuzzy things. YMMV.
