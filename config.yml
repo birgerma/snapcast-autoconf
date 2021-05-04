@@ -1,0 +1,25 @@
+---
+loglevel: debug
+# For now, we only support TCP connections. This could always be on localhost!
+server: tcp://192.168.1.29:1705
+# We only explicitly manage the streams and clients referenced in this file - however,
+# that doesn't mean that snapcast-autoconfig won't inadvertently mess up a manual grouping
+# you've made. Snapcast groups are dynamic, fuzzy things. YMMV.
+#
+# For each stream, the clients that should be grouped together when it starts playing are listed.
+# The order of the streams is important - streams higher up take precedence over streams further
+# down when deciding which group should claim clients. For example, consider a scenario where
+# the 'office' and 'wholehouse' streams are playing simultaneously. In that case, the 'office' client
+# would always be grouped with the 'office' stream as configured here, because it has the highest priority
+# in the list. The 'wholehouse' stream wouldn't get the 'office' client; it'd technically be incomplete.
+streams:
+  SpotifyHomeGroup:
+    clients:
+      - rasp-stereo
+      - xps13
+  SpotifyStereo:
+    clients:
+      - rasp-stereo
+  SpotifyComputer:
+    clients:
+      - xps13
