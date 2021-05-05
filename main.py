@@ -47,6 +47,26 @@ def get_group_ids():
         group_ids.append(group.identifier)
     return group_ids
 
+def get_best_group(stream_name):
+    global server
+    # group_ids = []
+    best_group = None
+    for group in server.groups:
+        if group.stream == stream_name:
+            return group
+        if group.stream_status == IDLE_STATUS:
+            best_group = group
+        print(group)
+        print(group.stream_status)
+        print(group.stream)
+        # print(dir(group))
+        # group_ids.append(group.identifier)
+    if best_group:
+        return best_group
+    return group
+    # return group_ids
+
+
 def get_streams(server, watched_streams):
     streams = {}
     for stream in server.streams:
@@ -65,13 +85,33 @@ def group_clients(group_id, clients):
     except Exception as e:
         logger.warning(e)
 
+def filter_existing_clients(clients):
+    existing = []
+    names = []
+    # print("Watched clients:", clients)
+    for client in server.clients:
+        print(client.identifier)
+        names.append(client.identifier)
+    # print("Existing clients:", names)
+    for client in clients:
+        if client in names:
+            existing.append(client)
+    return existing
+
+
+
 def configure_devices(stream_name, config):
     logger.info("Stream to configure:" + stream_name)
     stream_config = config['streams'][stream_name]
-    clients = stream_config['clients']
+    # clients = stream_config['clients']
+    clients = filter_existing_clients(stream_config['clients'])
     group_id = get_group_ids()[0]
+    # group = get_best_group(stream_name)
+    # print("Best group:", group)
+    # group_id = group.identifier
     group_clients(group_id, clients)
     logger.info("Set clients" + str(clients) + " to group " + group_id)
+    
     loop.run_until_complete(server.group_stream(group_id, stream_name))
     logger.info("Set stream " + stream_name + "on group " + group_id)
     
